@@ -16,5 +16,5 @@ services:
       - key: JWT_SECRET
         sync: false
       - key: MONGODB_URI
-        sync: false
+        value: mongodb+srv://root:12345@cluster1.b4n7frn.mongodb.net/arealearn?retryWrites=true&w=majority&appName=Cluster1
     autoDeploy: true 

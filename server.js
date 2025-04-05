@@ -4,8 +4,6 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const errorHandler = require('./middlewares/error');
 const path = require('path');
-const helmet = require('helmet');
-const morgan = require('morgan');
 
 // Load env vars
 dotenv.config();
@@ -24,11 +22,21 @@ const app = express();
 // Trust proxy if behind a proxy (like Heroku, Render, etc.)
 app.set('trust proxy', 1);
 
-// Security middleware
-app.use(helmet());
+// Security headers (basic version without helmet)
+app.use((req, res, next) => {
+  // Set security headers manually
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
+  next();
+});
 
-// Logging middleware
-app.use(process.env.NODE_ENV === 'production' ? morgan('combined') : morgan('dev'));
+// Simple logging middleware
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);
+  next();
+});
 
 // Body parser
 app.use(express.json());
@@ -36,7 +44,7 @@ app.use(express.json());
 // Enable CORS with appropriate config
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-frontend-app.com', 'https://www.your-frontend-app.com', /\.render\.com$/] 
+    ? (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*') 
     : true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
