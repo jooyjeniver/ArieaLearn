@@ -22,6 +22,64 @@ const ModuleSchema = new mongoose.Schema({
   imageUrl: {
     type: String
   },
+  icon: {
+    type: String,
+    default: 'book-open-variant'
+  },
+  color: {
+    type: String,
+    default: '#4CAF50'
+  },
+  lessons: [{
+    id: {
+      type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    description: {
+      type: String,
+      required: true
+    },
+    duration: {
+      type: String,
+      required: true
+    },
+    progress: {
+      type: Number,
+      default: 0
+    },
+    difficulty: {
+      type: String,
+      enum: ['Beginner', 'Intermediate', 'Advanced'],
+      default: 'Beginner'
+    },
+    icon: {
+      type: String
+    },
+    subject: {
+      type: String,
+      required: true
+    },
+    arEnabled: {
+      type: Boolean,
+      default: false
+    },
+    learningObjectives: [{
+      type: String
+    }],
+    keyConcepts: [{
+      type: String
+    }],
+    activities: [{
+      type: String
+    }],
+    vocabulary: [{
+      type: String
+    }]
+  }],
   arModels: [{
     name: {
       type: String,

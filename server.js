@@ -16,6 +16,10 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const moduleRoutes = require('./routes/modules');
 const arModelRoutes = require('./routes/arModels');
+const lessonRoutes = require('./routes/lessons');
+const progressRoutes = require('./routes/progress');
+const aiRoutes = require('./routes/ai');
+const subjectRoutes = require('./routes/subjects');
 
 const app = express();
 
@@ -44,14 +48,24 @@ app.use(express.json());
 // Enable CORS with appropriate config
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*') 
+    ? [
+        process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*',
+        process.env.BASE_URL,
+        'http://10.0.2.2:5000',  // Android emulator
+        'http://localhost:5000', // Local development
+        'http://127.0.0.1:5000',  // Alternative local address
+        'http://192.168.8.192:5000' // New IP address
+      ].flat()
     : true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
   credentials: true,
   maxAge: 86400 // 24 hours
 };
 app.use(cors(corsOptions));
+
+// Add OPTIONS handling for preflight requests
+app.options('*', cors(corsOptions));
 
 // Set static folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -61,6 +75,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/modules', moduleRoutes);
 app.use('/api/armodels', arModelRoutes);
+app.use('/api/lessons', lessonRoutes);
+app.use('/api/progress', progressRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/v1/subjects', subjectRoutes);
 
 // Basic route for testing
 app.get('/', (req, res) => {
@@ -85,4 +103,4 @@ process.on('unhandledRejection', (err, promise) => {
   console.log(`Error: ${err.message}`);
   // Close server & exit process
   server.close(() => process.exit(1));
-}); 
+});

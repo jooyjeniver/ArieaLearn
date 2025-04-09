@@ -6,7 +6,17 @@ const User = require('../models/User');
 exports.register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-
+    
+    // Check if user with the same email already exists
+    const existingUser = await User.findOne({ email });
+    
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        error: 'User with this email already exists'
+      });
+    }
+    
     // Create user
     const user = await User.create({
       name,
@@ -16,6 +26,13 @@ exports.register = async (req, res, next) => {
 
     sendTokenResponse(user, 201, res);
   } catch (err) {
+    // Handle duplicate key error specifically
+    if (err.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        error: 'User with this email already exists'
+      });
+    }
     next(err);
   }
 };
@@ -157,4 +174,24 @@ const sendTokenResponse = (user, statusCode, res) => {
       success: true,
       token
     });
+};
+
+// API Configuration
+const API_CONFIG = {
+  // For physical device - using actual IP address
+  BASE_URL: 'http://172.29.224.1:5000',
+  // For development/testing
+  DEV_URL: 'http://localhost:5000',
+  // For Android emulator
+  EMULATOR_URL: 'http://10.0.2.2:5000'
+};
+
+module.exports = {
+  register: exports.register,
+  login: exports.login,
+  getMe: exports.getMe,
+  logout: exports.logout,
+  updateDetails: exports.updateDetails,
+  updatePassword: exports.updatePassword,
+  API_CONFIG
 }; 

@@ -12,7 +12,9 @@ const errorHandler = (err, req, res, next) => {
       statusCode: error.status || 500,
       errorType: err.name,
       message: error.message,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      userAgent: req.headers['user-agent'],
+      origin: req.headers.origin
     });
   }
 
@@ -43,6 +45,12 @@ const errorHandler = (err, req, res, next) => {
   if (err.name === 'TokenExpiredError') {
     const message = 'Your token has expired. Please log in again.';
     error = { message, status: 401 };
+  }
+
+  // Network errors
+  if (err.code === 'ECONNREFUSED') {
+    const message = 'Unable to connect to the server. Please check your internet connection.';
+    error = { message, status: 503 };
   }
 
   // Respond with error

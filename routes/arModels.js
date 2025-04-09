@@ -22,10 +22,12 @@ const uploadFiles = multer({
   { name: 'textures', maxCount: 5 }
 ]);
 
+// Routes for all AR models
 router.route('/')
   .get(protect, getArModels)
   .post(protect, authorize('admin'), uploadFiles, createArModel);
 
+// Routes for specific AR model
 router.route('/:id')
   .get(protect, getArModel)
   .put(protect, authorize('admin'), uploadFiles, updateArModel)
