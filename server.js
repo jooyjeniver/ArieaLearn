@@ -14,7 +14,6 @@ connectDB();
 // Route files
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
-const moduleRoutes = require('./routes/modules');
 const arModelRoutes = require('./routes/arModels');
 const lessonRoutes = require('./routes/lessons');
 const progressRoutes = require('./routes/progress');
@@ -73,7 +72,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Mount routers
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/modules', moduleRoutes);
 app.use('/api/armodels', arModelRoutes);
 app.use('/api/lessons', lessonRoutes);
 app.use('/api/progress', progressRoutes);

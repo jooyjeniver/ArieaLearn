@@ -5,7 +5,7 @@ const fs = require('fs');
 
 // @desc    Get all AR models
 // @route   GET /api/armodels
-// @access  Private
+// @access  Public
 exports.getArModels = async (req, res, next) => {
   try {
     const arModels = await ArModel.find().populate('module', 'title');
@@ -22,7 +22,7 @@ exports.getArModels = async (req, res, next) => {
 
 // @desc    Get single AR model
 // @route   GET /api/armodels/:id
-// @access  Private
+// @access  Public
 exports.getArModel = async (req, res, next) => {
   try {
     const arModel = await ArModel.findById(req.params.id).populate('module', 'title');

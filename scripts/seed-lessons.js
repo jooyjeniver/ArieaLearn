@@ -5,8 +5,11 @@ const Module = require('../models/Module');
 // Load env vars
 dotenv.config();
 
+// Use default MongoDB URI if environment variable is not set
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/ariealearn';
+
 // Connect to database
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(MONGODB_URI)
   .then(() => console.log('MongoDB Connected'))
   .catch(err => {
     console.error(`Error connecting to MongoDB: ${err.message}`);
