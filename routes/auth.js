@@ -6,7 +6,7 @@ const {
   logout, 
   updateDetails, 
   updatePassword 
-} = require('../controllers/auth');
+} = require('../controllers/authController');
 const { protect } = require('../middlewares/auth');
 
 const router = express.Router();

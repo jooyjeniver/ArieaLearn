@@ -7,7 +7,7 @@ exports.getLessons = async (req, res, next) => {
   try {
     // Get all modules with their lessons
     const modules = await Module.find().sort({ order: 1 });
-    
+    console.log("lessones",modules);
     // Transform modules into the required format
     const lessons = modules.map(module => ({
       id: module._id.toString(),

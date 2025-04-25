@@ -3,7 +3,7 @@ const {
   getSubjects,
   getSubject,
   getSubjectModules
-} = require('../controllers/subjects');
+} = require('../controllers/subjectsController');
 
 const router = express.Router();
 

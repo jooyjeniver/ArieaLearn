@@ -4,7 +4,7 @@ const {
     updateLessonProgress,
     addEmotionalData,
     getEmotionalSummary
-} = require('../controllers/progress');
+} = require('../controllers/progressController');
 const { protect } = require('../middlewares/auth');
 
 const router = express.Router();

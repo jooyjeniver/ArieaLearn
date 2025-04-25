@@ -5,7 +5,7 @@ const {
   createLesson,
   updateLesson,
   deleteLesson
-} = require('../controllers/lessons');
+} = require('../controllers/lessonsController');
 const { protect, authorize } = require('../middlewares/auth');
 const { uploadResource } = require('../middlewares/uploads');
 
