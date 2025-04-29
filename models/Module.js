@@ -1,6 +1,24 @@
 const mongoose = require('mongoose');
 
-const ModuleSchema = new mongoose.Schema({
+const lessonSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true
+  },
+  content: {
+    type: String,
+    required: true
+  },
+  order: {
+    type: Number,
+    required: true
+  },
+  resources: [{
+    type: String
+  }]
+}, { timestamps: true });
+
+const moduleSchema = new mongoose.Schema({
   title: {
     type: String,
     required: [true, 'Please add a title'],
@@ -9,126 +27,31 @@ const ModuleSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: [true, 'Please add a description']
-  },
-  content: {
-    type: String,
-    required: [true, 'Please add content for the module']
-  },
-  order: {
-    type: Number,
-    required: [true, 'Please specify the module order']
+    required: [true, 'Please add a description'],
+    maxlength: [500, 'Description cannot be more than 500 characters']
   },
   imageUrl: {
-    type: String
-  },
-  icon: {
     type: String,
-    default: 'book-open-variant'
+    default: '/uploads/modules/default.jpg'
   },
-  color: {
+  category: {
     type: String,
-    default: '#4CAF50'
+    required: true
   },
-  lessons: [{
-    id: {
-      type: String,
-      required: true
-    },
-    title: {
-      type: String,
-      required: true
-    },
-    description: {
-      type: String,
-      required: true
-    },
-    duration: {
-      type: String,
-      required: true
-    },
-    progress: {
-      type: Number,
-      default: 0
-    },
-    difficulty: {
-      type: String,
-      enum: ['Beginner', 'Intermediate', 'Advanced'],
-      default: 'Beginner'
-    },
-    icon: {
-      type: String
-    },
-    subject: {
-      type: String,
-      required: true
-    },
-    arEnabled: {
-      type: Boolean,
-      default: false
-    },
-    learningObjectives: [{
-      type: String
-    }],
-    keyConcepts: [{
-      type: String
-    }],
-    activities: [{
-      type: String
-    }],
-    vocabulary: [{
-      type: String
-    }]
-  }],
-  arModels: [{
-    name: {
-      type: String,
-      required: true
-    },
-    modelUrl: {
-      type: String,
-      required: true
-    },
-    description: {
-      type: String
-    },
-    textures: [{
-      type: String
-    }]
-  }],
-  resources: [{
-    title: {
-      type: String,
-      required: true
-    },
-    type: {
-      type: String,
-      enum: ['pdf', 'video', 'link', 'image'],
-      required: true
-    },
-    url: {
-      type: String,
-      required: true
-    }
-  }],
-  quizzes: [{
-    question: {
-      type: String,
-      required: true
-    },
-    options: [{
-      type: String,
-      required: true
-    }],
-    correctAnswer: {
-      type: Number,
-      required: true
-    }
-  }],
+  difficulty: {
+    type: String,
+    enum: ['beginner', 'intermediate', 'advanced'],
+    default: 'beginner'
+  },
+  lessons: [lessonSchema],
+  order: {
+    type: Number,
+    default: 0
+  },
   createdAt: {
     type: Date,
     default: Date.now
   }
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model('Module', ModuleSchema); 
+module.exports = mongoose.model('Module', moduleSchema); 

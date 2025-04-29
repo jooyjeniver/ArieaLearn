@@ -8,17 +8,22 @@ const path = require('path');
 // Load env vars
 dotenv.config();
 
-// Connect to database
-connectDB();
-
 // Route files
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
+const moduleRoutes = require('./routes/modules');
 const arModelRoutes = require('./routes/arModels');
 const lessonRoutes = require('./routes/lessons');
 const progressRoutes = require('./routes/progress');
 const aiRoutes = require('./routes/ai');
 const subjectRoutes = require('./routes/subjects');
+const topicRoutes = require('./routes/topics');
+
+// New quiz-related route files
+const quizRoutes = require('./routes/quizzes');
+const awardRoutes = require('./routes/awards');
+const adminRoutes = require('./routes/admin');
+const userProgressRoutes = require('./routes/user');
 
 const app = express();
 
@@ -72,11 +77,19 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Mount routers
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/modules', moduleRoutes);
 app.use('/api/armodels', arModelRoutes);
 app.use('/api/lessons', lessonRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/v1/subjects', subjectRoutes);
+app.use('/api/topics', topicRoutes);
+
+// Mount new quiz-related routes
+app.use('/api/quizzes', quizRoutes);
+app.use('/api/awards', awardRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/user', userProgressRoutes);
 
 // Basic route for testing
 app.get('/', (req, res) => {
@@ -90,15 +103,26 @@ app.get('/', (req, res) => {
 // Error handler middleware
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
-
-const server = app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-});
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err, promise) => {
-  console.log(`Error: ${err.message}`);
-  // Close server & exit process
-  server.close(() => process.exit(1));
-});
+// Connect to database
+connectDB()
+  .then(() => {
+    console.log('MongoDB Connected');
+    
+    // Start the server only after DB connection is established
+    const PORT = process.env.PORT || 5000;
+    
+    const server = app.listen(PORT, () => {
+      console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+    });
+    
+    // Handle unhandled promise rejections
+    process.on('unhandledRejection', (err, promise) => {
+      console.log(`Error: ${err.message}`);
+      // Close server & exit process
+      server.close(() => process.exit(1));
+    });
+  })
+  .catch(err => {
+    console.error('Failed to connect to MongoDB:', err.message);
+    process.exit(1);
+  });

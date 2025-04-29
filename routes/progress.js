@@ -3,7 +3,11 @@ const {
     getOverallProgress,
     updateLessonProgress,
     addEmotionalData,
-    getEmotionalSummary
+    getEmotionalSummary,
+    getUserProgress,
+    getUserAwards,
+    getQuizHistory,
+    getLeaderboard
 } = require('../controllers/progressController');
 const { protect } = require('../middlewares/auth');
 
@@ -16,10 +20,18 @@ router.use(protect);
 router.get('/', getOverallProgress);
 
 // Update lesson progress
-router.post('/lesson', updateLessonProgress);
+router.put('/lesson/:id', updateLessonProgress);
 
 // Emotional data routes
-router.post('/emotional-data', addEmotionalData);
-router.get('/emotional-summary', getEmotionalSummary);
+router.post('/emotional', addEmotionalData);
+router.get('/emotional/summary', getEmotionalSummary);
+
+// Quiz-related progress routes
+router.get('/quiz', getUserProgress);
+router.get('/awards', getUserAwards);
+router.get('/quiz-history', getQuizHistory);
+
+// Leaderboard route (doesn't require authentication)
+router.get('/leaderboard', getLeaderboard);
 
 module.exports = router; 
