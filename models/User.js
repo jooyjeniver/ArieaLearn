@@ -48,7 +48,94 @@ const UserSchema = new mongoose.Schema({
     completionPercentage: {
       type: Number,
       default: 0
+    },
+    // Quiz-related progress
+    completedQuizzes: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Quiz'
+    }],
+    quizStats: {
+      totalAttempted: {
+        type: Number,
+        default: 0
+      },
+      totalPassed: {
+        type: Number,
+        default: 0
+      },
+      averageScore: {
+        type: Number,
+        default: 0
+      },
+      // Category-specific stats
+      categoryProgress: [{
+        category: {
+          type: String,
+          enum: [
+            'Myself and My Family',
+            'Our School and Community',
+            'Good Habits and Citizenship',
+            'My Environment',
+            'Time and History',
+            'Transport and Communication'
+          ]
+        },
+        completed: {
+          type: Number,
+          default: 0
+        },
+        totalAvailable: {
+          type: Number,
+          default: 0
+        },
+        averageScore: {
+          type: Number,
+          default: 0
+        }
+      }]
+    },
+    streaks: {
+      current: {
+        type: Number,
+        default: 0
+      },
+      best: {
+        type: Number,
+        default: 0
+      },
+      lastActivity: {
+        type: Date,
+        default: Date.now
+      }
     }
+  },
+  awards: [{
+    award: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Award'
+    },
+    dateEarned: {
+      type: Date,
+      default: Date.now
+    },
+    fromQuiz: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Quiz'
+    }
+  }],
+  points: {
+    total: {
+      type: Number,
+      default: 0
+    },
+    history: [{
+      amount: Number,
+      reason: String,
+      date: {
+        type: Date,
+        default: Date.now
+      }
+    }]
   }
 });
 
