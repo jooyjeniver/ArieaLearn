@@ -22,9 +22,9 @@ mongoose.connect(MONGODB_URI)
 // Sample AR models data - we'll need to get the module ID from the database
 const sampleArModels = [
   {
-    name: 'Family Tree 3D Model',
-    description: 'Identify family members and understand relationships within a family',
-    modelFile: '/uploads/models/family-tree.glb', // This file should be placed in uploads/models folder
+    name: 'Myself and My Family',
+    description: 'Learn about personal identity, family relationships, and responsibilities at home',
+    modelFile: '/uploads/models/treeparts.glb', // This file should be placed in uploads/models folder
     fileType: 'glb',
     previewImage: '/uploads/resources/family-tree.png',
     scale: {

@@ -4,6 +4,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const errorHandler = require('./middlewares/error');
 const path = require('path');
+const fs = require('fs');
 
 // Load env vars
 dotenv.config();
@@ -24,6 +25,9 @@ const quizRoutes = require('./routes/quizzes');
 const awardRoutes = require('./routes/awards');
 const adminRoutes = require('./routes/admin');
 const userProgressRoutes = require('./routes/user');
+
+// Import routes
+const emotionRoutes = require('./routes/emotion');
 
 const app = express();
 
@@ -73,6 +77,8 @@ app.options('*', cors(corsOptions));
 
 // Set static folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Add this line to support /api/uploads path as well
+app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Mount routers
 app.use('/api/auth', authRoutes);
@@ -90,6 +96,9 @@ app.use('/api/quizzes', quizRoutes);
 app.use('/api/awards', awardRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/user', userProgressRoutes);
+
+// Mount emotion routes
+app.use('/api/emotion', emotionRoutes);
 
 // Basic route for testing
 app.get('/', (req, res) => {
@@ -126,3 +135,8 @@ connectDB()
     console.error('Failed to connect to MongoDB:', err.message);
     process.exit(1);
   });
+
+const tempDir = path.join(__dirname, 'uploads', 'temp');
+if (!fs.existsSync(tempDir)) {
+  fs.mkdirSync(tempDir, { recursive: true });
+}
